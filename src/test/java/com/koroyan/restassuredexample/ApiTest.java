@@ -6,7 +6,9 @@ import com.koroyan.restassuredexample.enums.SOAPAction;
 import com.koroyan.restassuredexample.pojos.response.FindPersonResult;
 import com.koroyan.restassuredexample.repository.PersonRepository;
 import com.koroyan.restassuredexample.repository.PersonRepositoryImpl;
+import com.koroyan.restassuredexample.services.GetListService;
 import com.koroyan.restassuredexample.steps.Step;
+import io.restassured.response.Response;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
@@ -14,6 +16,8 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+
+import static org.hamcrest.core.IsEqual.equalTo;
 
 public class ApiTest {
 
@@ -48,6 +52,18 @@ public class ApiTest {
         JSONAssert.assertEquals(apiPerson.toString(),databasePerson.toString(),false);
     }
 
+
+    @Test
+    public void testGetListByName() {
+        GetListService getListService = new GetListService();
+
+        Response response = getListService.getListByName("Xavier");
+
+        response.then()
+                .statusCode(200)
+                .body("someExpectedField", equalTo("expectedValue"))
+                .body("anotherField", equalTo("anotherExpectedValue"));
+    }
 
 
 }
